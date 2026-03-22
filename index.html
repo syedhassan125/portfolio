@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Syed Hassan — Fintech & Data Professional</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--bg2:#0f0f18;--bg3:#13131f;--card:#111120;--border:rgba(255,255,255,0.07);--accent:#00d4ff;--accent2:#7b5ea7;--accent3:#00ffaa;--text:#e8e8f0;--muted:#6b6b88;--white:#ffffff}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:.4}
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 60px;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,15,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--white);letter-spacing:-.5px;text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-links{display:flex;gap:36px;list-style:none}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.05em;transition:color .2s;cursor:pointer}
+  .nav-links a:hover{color:var(--accent)}
+  .nav-links a.active{color:var(--accent)}
+
+  /* LIGHTBOX */
+  .lb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;align-items:center;justify-content:center;padding:20px}
+  .lb-overlay.open{display:flex}
+  .lb-overlay img{max-width:90vw;max-height:88vh;border-radius:8px;object-fit:contain}
+  .lb-close{position:absolute;top:20px;right:28px;font-size:28px;color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;transition:color .2s}
+  .lb-close:hover{color:var(--white)}
+  .lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);font-size:32px;color:var(--muted);cursor:pointer;transition:color .2s;user-select:none;padding:16px}
+  .lb-prev{left:8px}.lb-next{right:8px}
+  .lb-prev:hover,.lb-next:hover{color:var(--white)}
+
+  /* THUMBNAILS */
+  .thumb-row{display:grid;gap:10px;margin-bottom:16px}
+  .thumb-row.cols2{grid-template-columns:1fr 1fr}
+  .thumb-row.cols3{grid-template-columns:1fr 1fr 1fr}
+  .thumb{border-radius:8px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:border-color .2s}
+  .thumb:hover{border-color:rgba(0,212,255,.35)}
+  .thumb img{width:100%;display:block;height:150px;object-fit:cover;object-position:top}
+
+  /* HERO */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:120px 60px 80px;overflow:hidden}
+  .hero-glow{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,.06) 0%,transparent 70%);top:-150px;right:-150px;pointer-events:none}
+  .hero-glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(123,94,167,.07) 0%,transparent 70%);bottom:0;left:100px;pointer-events:none}
+  .hero-content{position:relative;z-index:2;max-width:820px}
+  .hero-tag{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.18);padding:6px 14px;border-radius:100px;margin-bottom:32px;letter-spacing:.08em}
+  .hero-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+  .hero h1{font-family:'Syne',sans-serif;font-size:clamp(48px,6.5vw,88px);font-weight:800;line-height:.95;letter-spacing:-3px;color:var(--white);margin-bottom:24px}
+  .hero h1 .accent{color:var(--accent)}
+  .hero h1 .dim{color:var(--muted)}
+  .hero-sub{font-size:17px;color:var(--muted);max-width:580px;line-height:1.75;margin-bottom:48px;font-weight:300}
+  .hero-sub strong{color:var(--text);font-weight:500}
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:64px}
+  .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;border-radius:6px;text-decoration:none;letter-spacing:.03em;transition:all .2s;cursor:pointer}
+  .btn-primary:hover{background:#33ddff;transform:translateY(-1px);box-shadow:0 8px 30px rgba(0,212,255,.2)}
+  .btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:transparent;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;border:1px solid var(--border);border-radius:6px;text-decoration:none;letter-spacing:.03em;transition:all .2s;cursor:pointer}
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+  .hero-stats{display:flex;gap:48px;padding-top:32px;border-top:1px solid var(--border);flex-wrap:wrap}
+  .stat-num{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:var(--white);line-height:1}
+  .stat-num span{color:var(--accent)}
+  .stat-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;margin-top:4px}
+
+  /* SECTIONS */
+  section{position:relative;z-index:2;padding:100px 60px}
+  .section-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px}
+  .section-title{font-family:'Syne',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;color:var(--white);letter-spacing:-1.5px;line-height:1.05;margin-bottom:16px}
+  .section-desc{font-size:15px;color:var(--muted);max-width:520px;margin-bottom:56px;line-height:1.75}
+
+  /* SKILLS STRIP */
+  .skills-strip{background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 60px;overflow:hidden;position:relative;z-index:2}
+  .skills-track{display:flex;gap:40px;animation:marquee 25s linear infinite;width:max-content}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .skill-pill{display:flex;align-items:center;gap:8px;white-space:nowrap;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.05em}
+  .skill-pill::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent)}
+
+  /* ABOUT */
+  #about{background:var(--bg2)}
+  .about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:start}
+  .about-text p{color:var(--muted);font-size:15px;line-height:1.85;margin-bottom:18px}
+  .about-text p strong{color:var(--text)}
+  .about-text .hl{color:var(--accent)}
+  .about-cards{display:flex;flex-direction:column;gap:14px}
+  .about-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 22px;display:flex;align-items:center;gap:16px;transition:border-color .2s}
+  .about-card:hover{border-color:rgba(0,212,255,.25)}
+  .about-card-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+  .icon-cyan{background:rgba(0,212,255,.1)}.icon-purple{background:rgba(123,94,167,.15)}.icon-green{background:rgba(0,255,170,.1)}.icon-gold{background:rgba(255,200,60,.1)}
+  .about-card-text strong{display:block;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px}
+  .about-card-text span{font-size:12px;color:var(--muted)}
+
+  /* EXPERIENCE */
+  #experience{background:var(--bg)}
+  .exp-timeline{position:relative;padding-left:32px}
+  .exp-timeline::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,var(--accent),var(--accent2),transparent)}
+  .exp-item{position:relative;padding-bottom:52px}
+  .exp-item::before{content:'';position:absolute;left:-36px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 0 3px rgba(0,212,255,.2)}
+  .exp-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.08em;margin-bottom:6px}
+  .exp-role{font-family:'Syne',sans-serif;font-size:19px;font-weight:700;color:var(--white);margin-bottom:2px}
+  .exp-company{font-size:14px;color:var(--muted);margin-bottom:16px}
+  .exp-company span{color:var(--accent2);font-weight:500}
+  .exp-points{display:flex;flex-direction:column;gap:7px}
+  .exp-point{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--muted);line-height:1.65}
+  .exp-point::before{content:'→';color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;flex-shrink:0;margin-top:3px}
+
+  /* DATA WORK */
+  #data{background:var(--bg2)}
+  .data-story{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:28px}
+  .data-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px}
+  .data-panel.before{border-color:rgba(255,100,100,.2)}.data-panel.after{border-color:rgba(0,255,170,.2)}
+  .data-panel-header{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+  .data-dot{width:8px;height:8px;border-radius:50%}.dot-red{background:#ff6b6b}.dot-green{background:var(--accent3)}
+  .data-panel-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white)}
+  .data-issues{display:flex;flex-direction:column;gap:10px}
+  .data-issue{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted);line-height:1.6}
+  .issue-icon{flex-shrink:0;margin-top:1px}
+  .data-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .data-metric{background:rgba(0,255,170,.05);border:1px solid rgba(0,255,170,.1);border-radius:8px;padding:14px}
+  .data-metric-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--accent3);line-height:1;margin-bottom:4px}
+  .data-metric-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.05em}
+  .tag{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:4px;color:var(--muted);letter-spacing:.05em}
+
+  /* PROJECTS */
+  #web3{background:var(--bg)}
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .proj-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;transition:border-color .25s}
+  .proj-card:hover{border-color:rgba(0,212,255,.2)}
+  .proj-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+  .proj-icon{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:19px}
+  .wi-sol{background:linear-gradient(135deg,rgba(153,69,255,.15),rgba(0,212,255,.08))}
+  .wi-re{background:linear-gradient(135deg,rgba(255,200,60,.12),rgba(0,212,255,.06))}
+  .wi-ai{background:linear-gradient(135deg,rgba(255,170,0,.12),rgba(255,100,100,.06))}
+  .wi-bot{background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(123,94,167,.08))}
+  .proj-badge{font-family:'DM Mono',monospace;font-size:10px;padding:3px 9px;border-radius:100px;letter-spacing:.07em}
+  .badge-acc{background:rgba(0,212,255,.08);color:var(--accent);border:1px solid rgba(0,212,255,.15)}
+  .badge-live{background:rgba(0,255,170,.08);color:var(--accent3);border:1px solid rgba(0,255,170,.15)}
+  .badge-val{background:rgba(123,94,167,.1);color:#b08ee0;border:1px solid rgba(123,94,167,.2)}
+  .proj-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--white);margin-bottom:4px}
+  .proj-sub{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+  .proj-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+  .proj-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .proj-link{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;transition:opacity .2s}
+  .proj-link:hover{opacity:.7}
+
+  /* CONTACT */
+  #contact{background:var(--bg2);text-align:center}
+  .contact-inner{max-width:580px;margin:0 auto}
+  .contact-email{font-family:'Syne',sans-serif;font-size:clamp(18px,3vw,30px);font-weight:800;color:var(--white);text-decoration:none;display:inline-block;margin:28px 0;transition:color .2s;letter-spacing:-.5px}
+  .contact-email:hover{color:var(--accent)}
+  .contact-links{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+  .contact-link{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);text-decoration:none;transition:all .2s;letter-spacing:.04em}
+  .contact-link:hover{border-color:var(--accent);color:var(--accent)}
+
+  footer{position:relative;z-index:2;text-align:center;padding:24px 60px;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.05em}
+
+  @media(max-width:900px){
+    nav{padding:16px 24px}.nav-links{display:none}
+    .hero,section{padding-left:24px;padding-right:24px}
+    .skills-strip{padding:18px 24px}
+    .about-grid,.data-story,.proj-grid{grid-template-columns:1fr}
+    .hero-stats{gap:28px}
+    .thumb-row.cols2,.thumb-row.cols3{grid-template-columns:1fr 1fr}
+    footer{padding:24px}
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<!-- LIGHTBOX -->
+<div class="lb-overlay" id="lb" onclick="if(event.target===this)closeLB()">
+  <span class="lb-close" onclick="closeLB()">✕</span>
+  <span class="lb-prev" onclick="lbNav(-1)">‹</span>
+  <img id="lb-img" src="" alt="">
+  <span class="lb-next" onclick="lbNav(1)">›</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">SH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a onclick="navTo('data')" data-section="data">data work</a></li>
+    <li><a onclick="navTo('web3')" data-section="web3">projects</a></li>
+    <li><a onclick="navTo('contact')" data-section="contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Open to opportunities</div>
+    <h1>Syed<br><span class="accent">Hassan</span><span class="dim">.</span></h1>
+    <p class="hero-sub">
+      <strong>Fintech Operations · AML/KYC Compliance · Data Analytics</strong><br>
+      2+ years in UK financial services at SS&C Technologies and SS&C Hubwise. MSc Business Analytics. Currently building ETL pipelines and Power BI dashboards — and shipping blockchain products on the side.
+    </p>
+    <div class="hero-ctas">
+      <a onclick="navTo('experience')" class="btn-primary">View Experience →</a>
+      <a onclick="navTo('contact')" class="btn-secondary">Get in Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">2<span>+</span></div><div class="stat-label">YRS UK FINTECH</div></div>
+      <div class="stat-item"><div class="stat-num">MSc</div><div class="stat-label">BUSINESS ANALYTICS</div></div>
+      <div class="stat-item"><div class="stat-num">AML</div><div class="stat-label">KYC / GDPR</div></div>
+      <div class="stat-item"><div class="stat-num">ETL</div><div class="stat-label">POWER BI · SQL</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS STRIP -->
+<div class="skills-strip">
+  <div class="skills-track">
+    <span class="skill-pill">AML / KYC</span><span class="skill-pill">GDPR Compliance</span><span class="skill-pill">Investment Operations</span><span class="skill-pill">Power BI</span><span class="skill-pill">ETL Pipelines</span><span class="skill-pill">Power Query</span><span class="skill-pill">SQL</span><span class="skill-pill">Data Modelling</span><span class="skill-pill">API Transaction Processing</span><span class="skill-pill">MI Reporting</span><span class="skill-pill">Statistical Modelling</span><span class="skill-pill">Regulatory Documentation</span><span class="skill-pill">Financial Services</span><span class="skill-pill">Master Data Management</span>
+    <span class="skill-pill">AML / KYC</span><span class="skill-pill">GDPR Compliance</span><span class="skill-pill">Investment Operations</span><span class="skill-pill">Power BI</span><span class="skill-pill">ETL Pipelines</span><span class="skill-pill">Power Query</span><span class="skill-pill">SQL</span><span class="skill-pill">Data Modelling</span><span class="skill-pill">API Transaction Processing</span><span class="skill-pill">MI Reporting</span><span class="skill-pill">Statistical Modelling</span><span class="skill-pill">Regulatory Documentation</span><span class="skill-pill">Financial Services</span><span class="skill-pill">Master Data Management</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">// about me</div>
+  <h2 class="section-title">Fintech. Data.<br>Compliance.</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a <strong>fintech operations and data professional</strong> with hands-on experience across UK financial services and a strong analytical foundation. My career has spanned AML/KYC compliance, digital investment platform operations, and data analytics — giving me a rare combination of regulatory depth and technical capability.</p>
+      <p>I spent 2+ years at <span class="hl">SS&C Technologies</span> and <span class="hl">SS&C Hubwise</span> in the UK, working on investment operations, client onboarding, AML/KYC compliance, and MI reporting. I understand how regulated financial services firms operate from the inside.</p>
+      <p>I hold an <strong>MSc in Business Analytics</strong> (Merit) from Manchester Metropolitan University and currently work as a Data and Operations Analyst building ETL pipelines and Power BI dashboards. I also independently direct the development of blockchain products — bringing a builder's mindset to everything I do.</p>
+      <p>I'm actively targeting roles in <strong>fintech, compliance, and data analytics</strong> — with a strong interest in the GCC market given its rapid financial services growth.</p>
+    </div>
+    <div class="about-cards">
+      <div class="about-card"><div class="about-card-icon icon-cyan">🏦</div><div class="about-card-text"><strong>Fintech Operations & Compliance</strong><span>AML/KYC, GDPR, investment ops — SS&C Technologies & Hubwise, UK</span></div></div>
+      <div class="about-card"><div class="about-card-icon icon-green">📊</div><div class="about-card-text"><strong>Data Analytics</strong><span>Power BI, ETL pipelines, SQL, statistical modelling — MSc Business Analytics (Merit)</span></div></div>
+      <div class="about-card"><div class="about-card-icon icon-gold">📋</div><div class="about-card-text"><strong>Regulatory Knowledge</strong><span>FCA-regulated environment · GDPR · AML/CTF frameworks · digital investment platforms</span></div></div>
+      <div class="about-card"><div class="about-card-icon icon-purple">⛓️</div><div class="about-card-text"><strong>Tech-Savvy Builder</strong><span>Independently ships live blockchain products — brings a product and engineering mindset</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">// professional experience</div>
+  <h2 class="section-title">Experience.</h2>
+  <p class="section-desc">Built across UK financial services operations, AML/KYC compliance, and data analytics — with a consistent focus on accuracy, regulation, and actionable insight.</p>
+  <div class="exp-timeline">
+    <div class="exp-item">
+      <div class="exp-date">JAN 2026 – PRESENT</div>
+      <div class="exp-role">Data and Operations Analyst</div>
+      <div class="exp-company"><span>JHK Pharma</span> · Islamabad, Pakistan (Hybrid)</div>
+      <div class="exp-points">
+        <div class="exp-point">Built end-to-end ETL pipelines in Power Query integrating pharmaceutical dispatch, distributor, and channel datasets from multi-sheet, unstructured Excel files</div>
+        <div class="exp-point">Designed Power BI dashboards for machine performance KPIs, leakage analysis, and production vs plan reporting for executive stakeholders</div>
+        <div class="exp-point">Resolved master data fragmentation — standardised 56 product name variants into 10 categories using a mapping table, enabling accurate aggregation and trend analysis for the first time</div>
+        <div class="exp-point">Built scalable, folder-based automation in Power Query so new monthly files are processed without manual re-work</div>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-date">FEB 2025 – NOV 2025</div>
+      <div class="exp-role">Senior Associate</div>
+      <div class="exp-company"><span>SS&C Hubwise</span> · Basildon, United Kingdom (Hybrid) · Digital Investment Platform</div>
+      <div class="exp-points">
+        <div class="exp-point">Delivered fintech operational support for a UK-regulated digital investment platform, resolving 50+ IFA queries weekly with consistent SLA adherence</div>
+        <div class="exp-point">Processed investment transfers via Origo and Altus APIs, maintaining full AML/KYC and GDPR compliance across all digital transactions</div>
+        <div class="exp-point">Produced MI reports from operational dashboards, translating data into actionable recommendations for stakeholder workflow improvements</div>
+        <div class="exp-point">Drafted regulatory-compliant documentation and automated rejection workflows, reducing manual processing bottlenecks</div>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-date">FEB 2024 – FEB 2025</div>
+      <div class="exp-role">Senior Associate</div>
+      <div class="exp-company"><span>SS&C Technologies</span> · Burnley, United Kingdom · Investment Operations</div>
+      <div class="exp-points">
+        <div class="exp-point">Managed client investment portfolios across ISAs, OEICs, and Child Trust Funds using TPS and FAST systems with full GDPR compliance</div>
+        <div class="exp-point">Conducted AML checks and compliance reviews; supported CIAM-based client identity management and account security protocols</div>
+        <div class="exp-point">Executed investment operations including withdrawals, top-ups, fund switches, and deal amendments with error-free processing standards</div>
+        <div class="exp-point">Translated complex regulatory queries into clear guidance for non-technical clients, improving resolution times and client satisfaction</div>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-date">MAR 2017 – AUG 2022</div>
+      <div class="exp-role">Business Consultant</div>
+      <div class="exp-company"><span>Soft-Crust Digital Experts</span> · Islamabad, Pakistan</div>
+      <div class="exp-points">
+        <div class="exp-point">Advised clients on operational strategy, process improvement, and project management framework implementation</div>
+        <div class="exp-point">Reviewed organisational structures and workflows to identify inefficiencies and design tailored solutions</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:.1em;margin-bottom:10px;">EDUCATION</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--white);margin-bottom:4px;">MSc Business Analytics — Merit</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">Manchester Metropolitan University, UK · 2022–2023</div>
+      <div style="font-size:12px;color:var(--muted);">AI & Machine Learning · Data Management · Statistical Modelling · Industry 4.0 · Business Statistics</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:.1em;margin-bottom:10px;">ALSO</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--white);margin-bottom:4px;">BBA (Hons) — HRM</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">Bahria University, Islamabad · 2013–2017</div>
+      <div style="font-size:12px;color:var(--muted);">Financial Management · Business Statistics · Research Methods · Financial Accounting</div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA WORK -->
+<section id="data">
+  <div class="section-label">// data analytics</div>
+  <h2 class="section-title">Data Work.</h2>
+  <p class="section-desc">Real-world data work on messy, operational datasets — not classroom exercises. From raw unstructured files to clean, executive-level dashboards.</p>
+
+  <div style="background:var(--card);border:1px solid rgba(0,255,170,.12);border-radius:16px;padding:26px 30px;margin-bottom:26px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent3);letter-spacing:.1em;margin-bottom:8px;">PROJECT · 2024–2026</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--white);margin-bottom:4px;">Pharma Distribution Data Standardisation & ETL</div>
+        <div style="font-size:13px;color:var(--muted);">Excel · Power Query · Power BI · SQL · Data Modelling</div>
+      </div>
+      <span style="font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:100px;letter-spacing:.07em;background:rgba(123,94,167,.1);color:#b08ee0;border:1px solid rgba(123,94,167,.2);align-self:flex-start;">INDUSTRY PROJECT</span>
+    </div>
+    <div style="margin-top:18px;font-size:14px;color:var(--muted);line-height:1.8;">End-to-end data preparation workflow for multi-year pharmaceutical dispatch data covering distributor-level transactions across Commercial and Government channels — sourced from multiple Excel files per month, each with a different structure, merged cells, subtotal rows, and inconsistent naming conventions.</div>
+  </div>
+
+  <div class="data-story">
+    <div class="data-panel before">
+      <div class="data-panel-header"><div class="data-dot dot-red"></div><div class="data-panel-title">The Raw Data Problem</div></div>
+      <div class="data-issues">
+        <div class="data-issue"><span class="issue-icon">⚠️</span><span>Multi-sheet Excel files — each sheet a different distributor, each file a different month, each with its own inconsistent structure</span></div>
+        <div class="data-issue"><span class="issue-icon">⚠️</span><span><strong style="color:var(--text)">Report-style formatting</strong> — merged cells, subtotal rows, summary rows, and blank rows mixed into the actual data</span></div>
+        <div class="data-issue"><span class="issue-icon">⚠️</span><span><strong style="color:var(--text)">56 fragmented product name variations</strong> for what were actually 10 standard products — made any aggregation completely unreliable</span></div>
+        <div class="data-issue"><span class="issue-icon">⚠️</span><span>Inconsistent column naming, incorrect % to decimal conversions, and post-merge nulls causing silent data loss</span></div>
+        <div class="data-issue"><span class="issue-icon">⚠️</span><span>Commercial and Government channel data stored separately with no common schema</span></div>
+      </div>
+    </div>
+    <div class="data-panel after">
+      <div class="data-panel-header"><div class="data-dot dot-green"></div><div class="data-panel-title">What Was Built</div></div>
+      <div class="data-metrics">
+        <div class="data-metric"><div class="data-metric-num">56→10</div><div class="data-metric-label">PRODUCTS STANDARDISED</div></div>
+        <div class="data-metric"><div class="data-metric-num">ETL</div><div class="data-metric-label">AUTOMATED PIPELINE</div></div>
+        <div class="data-metric"><div class="data-metric-num">2yr</div><div class="data-metric-label">DATA CONSOLIDATED</div></div>
+        <div class="data-metric"><div class="data-metric-num">SQL</div><div class="data-metric-label">ANALYSIS READY</div></div>
+      </div>
+      <div class="data-issues">
+        <div class="data-issue"><span class="issue-icon">✅</span><span>Folder-based Power Query automation — new monthly files processed automatically, no manual re-work</span></div>
+        <div class="data-issue"><span class="issue-icon">✅</span><span>Product mapping table unifying 56 name variants into 10 standard categories — reliable aggregation finally possible</span></div>
+        <div class="data-issue"><span class="issue-icon">✅</span><span>Fill Down logic, append queries, structured transforms to rebuild distributor-product relationships</span></div>
+        <div class="data-issue"><span class="issue-icon">✅</span><span>Cross-validated output against source files — zero unintended data loss confirmed</span></div>
+        <div class="data-issue"><span class="issue-icon">✅</span><span>SQL queries for distributor ranking, product aggregation, and month-on-month trend analysis</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard placeholder -->
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.08em;margin-bottom:14px;">// POWER BI DASHBOARDS</div>
+    <div style="background:var(--card);border:1px dashed rgba(0,255,170,.2);border-radius:14px;padding:52px 32px;text-align:center;">
+      <div style="font-size:28px;margin-bottom:14px;">📊</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--white);margin-bottom:8px;">Live Dashboards Coming Soon</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.05em;">Machine Performance Report · Distribution Analytics · Power BI</div>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px 26px;margin-bottom:14px;">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.08em;margin-bottom:14px;">WHAT THIS ENABLED</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <div style="font-size:13px;color:var(--muted);line-height:1.65;"><span style="color:var(--accent3);font-weight:600;display:block;margin-bottom:4px;">Distributor Performance</span>Reliable ranking and comparison of distributors by yearly and monthly dispatch volume</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.65;"><span style="color:var(--accent3);font-weight:600;display:block;margin-bottom:4px;">Product-Level Insights</span>Accurate product category analysis — previously impossible due to 56 naming variations</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.65;"><span style="color:var(--accent3);font-weight:600;display:block;margin-bottom:4px;">Trend Analysis</span>Month-on-month volume trends across Commercial and Government channels</div>
+    </div>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 26px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+    <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;">TOOLS</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <span class="tag" style="color:var(--accent3);border-color:rgba(0,255,170,.2)">Excel (Advanced)</span>
+      <span class="tag" style="color:var(--accent3);border-color:rgba(0,255,170,.2)">Power Query</span>
+      <span class="tag" style="color:var(--accent3);border-color:rgba(0,255,170,.2)">Power BI</span>
+      <span class="tag" style="color:var(--accent3);border-color:rgba(0,255,170,.2)">SQL</span>
+      <span class="tag" style="color:var(--accent3);border-color:rgba(0,255,170,.2)">ETL Pipeline Design</span>
+      <span class="tag" style="color:var(--accent3);border-color:rgba(0,255,170,.2)">Data Modelling</span>
+      <span class="tag" style="color:var(--accent3);border-color:rgba(0,255,170,.2)">Master Data Management</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="web3">
+  <div class="section-label">// side projects</div>
+  <h2 class="section-title">Also Building.</h2>
+  <p class="section-desc">Outside of work, I independently direct the development of live tech products — bringing product ownership and financial domain knowledge to blockchain.</p>
+
+  <div class="proj-grid">
+
+    <!-- Oracle Token -->
+    <div class="proj-card">
+      <div class="proj-card-top">
+        <div class="proj-icon wi-sol">🔮</div>
+        <span class="proj-badge badge-acc">ACCELERATOR</span>
+      </div>
+      <div class="proj-name">Oracle Token</div>
+      <div class="proj-sub">Decentralized Prediction Market · Solana · 35 Active Markets</div>
+      <div class="proj-desc">Live on-chain prediction market built and deployed on Solana. Accepted into the Colosseum Eternal Accelerator Programme. Applied for a $50k Solana Foundation Grant.</div>
+      <div class="thumb-row cols2">
+        <div class="thumb" onclick="openLB(['oracle1.png','oracle2.png'],0)"><img src="oracle1.png" alt="Oracle Token markets"></div>
+        <div class="thumb" onclick="openLB(['oracle1.png','oracle2.png'],1)"><img src="oracle2.png" alt="Oracle Token grid"></div>
+      </div>
+      <div class="proj-tags"><span class="tag">Solana</span><span class="tag">React/TS</span><span class="tag">Smart Contracts</span><span class="tag">Claude Code</span></div>
+      <a href="https://oracle-token-platform-rxtk.vercel.app" target="_blank" class="proj-link">View live →</a>
+    </div>
+
+    <!-- Fractio -->
+    <div class="proj-card">
+      <div class="proj-card-top">
+        <div class="proj-icon wi-re">🏢</div>
+        <span class="proj-badge badge-live">GCC FOCUSED</span>
+      </div>
+      <div class="proj-name">Fractio</div>
+      <div class="proj-sub">Real Estate Tokenization · Solana · GCC Markets</div>
+      <div class="proj-desc">Fractional real estate investment platform targeting GCC luxury property markets. Investors buy fractional ownership with automated rental income via smart contracts. Shortlisted for Bahrain FinTech Bay.</div>
+      <div class="thumb-row cols3">
+        <div class="thumb" onclick="openLB(['fractio1.png','fractio2.png','fractio3.png'],0)"><img src="fractio1.png" alt="Fractio hero"></div>
+        <div class="thumb" onclick="openLB(['fractio1.png','fractio2.png','fractio3.png'],1)"><img src="fractio2.png" alt="Fractio properties"></div>
+        <div class="thumb" onclick="openLB(['fractio1.png','fractio2.png','fractio3.png'],2)"><img src="fractio3.png" alt="Fractio how it works"></div>
+      </div>
+      <div class="proj-tags"><span class="tag">Next.js</span><span class="tag">Solana</span><span class="tag">Tokenization</span><span class="tag">GCC</span></div>
+      <a href="https://fractio-delta.vercel.app/#about" target="_blank" class="proj-link">View live →</a>
+    </div>
+
+    <!-- Hive Agents -->
+    <div class="proj-card">
+      <div class="proj-card-top">
+        <div class="proj-icon wi-ai">🤖</div>
+        <span class="proj-badge badge-live">LIVE</span>
+      </div>
+      <div class="proj-name">Hive Agents</div>
+      <div class="proj-sub">AI Agent Platform · 147 Pre-built Templates</div>
+      <div class="proj-desc">Live platform enabling users to create and manage custom AI agents with 147 pre-built templates across Engineering, Design, Product, and Testing. Full dashboard with agent network map and analytics.</div>
+      <div class="thumb-row cols3">
+        <div class="thumb" onclick="openLB(['hive1.png','hive2.png','hive3.png'],0)"><img src="hive1.png" alt="Hive Agents hero"></div>
+        <div class="thumb" onclick="openLB(['hive1.png','hive2.png','hive3.png'],1)"><img src="hive2.png" alt="Hive Agents dashboard"></div>
+        <div class="thumb" onclick="openLB(['hive1.png','hive2.png','hive3.png'],2)"><img src="hive3.png" alt="Hive Agents create agent"></div>
+      </div>
+      <div class="proj-tags"><span class="tag">AI Agents</span><span class="tag">LLM</span><span class="tag">Claude Code</span></div>
+      <a href="https://hive-agents-ten.vercel.app/" target="_blank" class="proj-link">View live →</a>
+    </div>
+
+    <!-- Trading Bot -->
+    <div class="proj-card">
+      <div class="proj-card-top">
+        <div class="proj-icon wi-bot">📈</div>
+        <span class="proj-badge badge-val">VALIDATED</span>
+      </div>
+      <div class="proj-name">Crypto Trading Bot</div>
+      <div class="proj-sub">Algorithmic Trading · Binance & MEXC · EMA/RSI</div>
+      <div class="proj-desc">Automated trading bot applying EMA/RSI indicator logic defined from financial domain knowledge. Connected to Binance and MEXC. Built and validated in paper trading (simulation) mode.</div>
+      <div class="proj-tags"><span class="tag">Binance API</span><span class="tag">MEXC API</span><span class="tag">Algo Trading</span><span class="tag">EMA/RSI</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label">// get in touch</div>
+    <h2 class="section-title">Let's Talk.</h2>
+    <p style="color:var(--muted);font-size:15px;line-height:1.7;">Open to fintech operations, compliance, and data analytics roles globally. Always happy to connect.</p>
+    <a href="mailto:syd_hassan@hotmail.com" class="contact-email">syd_hassan@hotmail.com</a>
+    <div class="contact-links">
+      <a href="https://linkedin.com/in/syedhassan125" target="_blank" class="contact-link">💼 LinkedIn</a>
+      <a href="https://github.com/syedhassan125" target="_blank" class="contact-link">🐙 GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>SYED HASSAN · ISLAMABAD, PAKISTAN · OPEN TO RELOCATION</footer>
+
+<script>
+  // Smooth scroll — offset for fixed navbar
+  function navTo(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const navH = document.querySelector('nav').offsetHeight;
+    const top  = el.getBoundingClientRect().top + window.pageYOffset - navH - 12;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  // Active nav link on scroll
+  const navLinks = document.querySelectorAll('.nav-links a[data-section]');
+  const sections = ['data', 'web3', 'contact'];
+  function updateActiveNav() {
+    const navH = document.querySelector('nav').offsetHeight;
+    let current = '';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= navH + 60) current = id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.dataset.section === current);
+    });
+  }
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+  // Lightbox
+  let lbImgs = [], lbIdx = 0;
+  function openLB(imgs, idx) {
+    lbImgs = imgs; lbIdx = idx;
+    document.getElementById('lb-img').src = lbImgs[lbIdx];
+    document.getElementById('lb').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLB() {
+    document.getElementById('lb').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function lbNav(dir) {
+    lbIdx = (lbIdx + dir + lbImgs.length) % lbImgs.length;
+    document.getElementById('lb-img').src = lbImgs[lbIdx];
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLB();
+    if (e.key === 'ArrowLeft') lbNav(-1);
+    if (e.key === 'ArrowRight') lbNav(1);
+  });
+</script>
+</body>
+</html>
